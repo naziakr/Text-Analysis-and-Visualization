@@ -1,0 +1,79 @@
+Use the code block below to load a new dataset: "US.Congress.1931-1969.gz"
+
+Once the data is loaded, find the most similar speeches by year, using the label "Year"
+
+
+file = os.path.join(ai.data_dir, "US.Congress.1931-1969.gz")
+df = pd.read_csv(file, index_col = 0)
+df.head()
+
+Year	Month	Day	Text
+33679	1931	1	5	Mr. President. I desire to move at this time. ...
+33680	1931	1	5	Mr. President. in the nature of a memorial. I ...
+33681	1931	1	5	Mr. President. I introduced and had referred t...
+33682	1931	1	5	I ask unanimous consent to have printed in the...
+33683	1931	1	5	Mr. President. during the consideration of the...
+
+Now, we're going to get ready to find the most similar samples. We're doing to two things here: (1) we transforming the text into vectors representing style and (2) we're choosing a random sample to look at. 
+This means we'll randomly select one chunk and then find the most similar samples to it.
+
+x, vocab_size = ai.get_features(df, "speech")
+sample = random.randint(0, len(df))
+print(x)
+print(sample)
+  (1, 120)	1
+  (2, 117)	1
+  (2, 119)	1
+  (2, 225)	1
+  (2, 446)	1
+  (2, 1430)	1
+  (2, 1525)	2
+  (2, 1925)	1
+  (2, 2826)	1
+  (2, 3414)	1
+  (2, 3931)	1
+  (2, 4739)	1
+  (2, 5279)	1
+  (4, 1470)	1
+  (4, 3390)	1
+  (5, 824)	2
+  (5, 1081)	1
+  (5, 1263)	1
+  (5, 1490)	1
+  (6, 195)	1
+  (6, 5355)	2
+  (7, 727)	1
+  (8, 1896)	1
+  (9, 195)	1
+  (10, 293)	1
+  :	:
+  (1338103, 691)	1
+  (1338103, 758)	1
+  (1338103, 825)	5
+  (1338103, 918)	1
+  (1338103, 2501)	2
+  (1338103, 2750)	1
+  (1338103, 3053)	2
+  (1338103, 4383)	1
+  (1338103, 4565)	1
+  (1338103, 4618)	2
+  (1338103, 5171)	1
+  (1338103, 5355)	2
+  (1338103, 5357)	1
+  (1338103, 5772)	2
+  (1338103, 5993)	1
+  (1338103, 6199)	1
+  (1338103, 6300)	1
+  (1338103, 6333)	1
+  (1338104, 957)	1
+  (1338104, 4566)	1
+  (1338104, 5730)	1
+  (1338105, 446)	2
+  (1338106, 446)	2
+  (1338106, 877)	2
+  (1338106, 1453)	1
+109249
+
+y_sample, y_closest = ai.linguistic_distance(x = x, y = df.loc[:, "Year"].values, sample = sample, n = 5)
+print(y_sample, y_closest)
+1935 [1948, 1959, 1962, 1940, 1958]
